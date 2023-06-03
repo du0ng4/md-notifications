@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: md-notifications-secret
+stringData:
+  mangadex_username: <mangadex_username>
+  mangadex_password: <mangadex_password>
+  discord_webhook_url: <discord_webhook_url>
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: md-notifications-deployment
+  labels:
+    app: md-notifications
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: md-notifications
+  template:
+    metadata:
+      labels:
+        app: md-notifications
+    spec:
+      containers:
+      - name: md-notifications
+        image: docker.io/du0ng4/md-notifications:master
+        imagePullPolicy: Always
+        env:
+        - name: MANGADEX_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: md-notifications-secret
+              key: mangadex_username
+        - name: MANGADEX_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name:  md-notifications-secret
+              key: mangadex_password
+        - name: DISCORD_WEBHOOK_URL
+          valueFrom:
+            secretKeyRef:
+              name:  md-notifications-secret
+              key: discord_webhook_url
