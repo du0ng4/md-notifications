@@ -21,12 +21,12 @@ def send_webhook(manga, chapter):
         "embeds": [
             {
                 "author": {
-                    "name": "Mangadex",
+                    "name": "MangaDex",
                     "icon_url": "https://avatars.githubusercontent.com/u/100574686?s=200&v=4"
                 },
                 "title": None,
                 "url": chapter["external_url"] or f"https://mangadex.org/chapter/{chapter['id']}",
-                "description": f"Group: {chapter['group']}",
+                "description": f"Group: {chapter['group']}\nUploader: {chapter['uploader']}",
                 "color": "4104968",
                 "fields": [
                     {

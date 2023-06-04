@@ -11,6 +11,6 @@ GET_PRIVATE_LIST = True if MANGADEX_USERNAME and MANGADEX_PASSWORD else False
 
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
 AVATAR_URL = os.getenv("AVATAR_URL") or "https://avatars.githubusercontent.com/u/100574686?s=200&v=4"
-WEBHOOK_USERNAME = os.getenv("WEBHOOK_USERNAME") or "MD-Notification"
+WEBHOOK_USERNAME = os.getenv("WEBHOOK_USERNAME") or "MD-Notifications"
 
 REFRESH_RATE = 20

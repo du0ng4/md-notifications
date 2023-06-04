@@ -16,18 +16,26 @@ logging.basicConfig(
 
 
 def main():
-    logger.info("Starting Mangadex-Notifications")
+    logger.info("Starting MangaDex-Notifications")
 
-    session = mangadex.login()
-    manga_list = mangadex.get_manga_list(session, get_latests=True)
+    if settings.GET_PRIVATE_LIST:
+        session = mangadex.login()
+        manga_list = mangadex.get_manga_list(session, get_latests=True)
+    elif settings.PUBLIC_MANGA_LIST:
+        session = None
+        manga_list = mangadex.get_manga_list(settings.PUBLIC_MANGA_LIST, get_info=True, get_latests=True)
+    else:
+        raise Exception("No manga list source")
 
-    logger.info("Successfully started Mangadex-Notifications")
+    logger.info("Successfully started MangaDex-Notifications")
 
     while True:
-        if mangadex.session_expired(session):
-            session = mangadex.refresh_session(session)
+        if settings.GET_PRIVATE_LIST:
+            if mangadex.session_expired(session):
+                session = mangadex.refresh_session(session)
 
-        manga_list = mangadex.update_manga_list(session, manga_list)
+        input = session or settings.PUBLIC_MANGA_LIST
+        manga_list = mangadex.update_manga_list(input, manga_list)
         for manga in manga_list:
             latest = mangadex.get_latest_chapter(manga["id"])
             if float(latest["chapter"]) > float(manga["latest_chapter"]["chapter"]):
