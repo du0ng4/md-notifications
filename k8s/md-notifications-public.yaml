@@ -8,6 +8,17 @@ stringData:
 
 ---
 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: md-notifications-config
+data:
+  style: compact
+  sender_username: <sender_username>
+  avatar_url: <avatar_url>
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,19 +38,16 @@ spec:
       containers:
       - name: md-notifications
         image: docker.io/du0ng4/md-notifications:master
-        imagePullPolicy: Never
-        env:
-        - name: PUBLIC_MANGA_LIST
-          valueFrom:
-            secretKeyRef:
-              name: md-notifications-secret
-              key: mdlist
-        - name: DISCORD_WEBHOOK_URL
-          valueFrom:
-            secretKeyRef:
-              name:  md-notifications-secret
-              key: discord_webhook_url
-        - name: AVATAR_URL
-          value: https://avatars.githubusercontent.com/u/100574686?s=200&v=4  
-        - name: WEBHOOK_USERNAME
-          value: MD-Notifications
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: secret-volume
+          mountPath: /etc/secret
+        - name: config-volume
+          mountPath: /etc/config
+      volumes:
+      - name: secret-volume
+        secret:
+          secretName: md-notifications-secret
+      - name: config-volume
+        configMap:
+          name: md-notifications-config
