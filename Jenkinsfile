@@ -22,7 +22,6 @@ spec:
   - name: dockerd
     hostPath:
       path: /var/run/docker.sock
-      type: File
 """
         }
     }
